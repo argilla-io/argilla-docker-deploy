@@ -37,6 +37,8 @@ if [ $(getent group docker) ]; then
     fi
 fi
 
+curl -o docker-compose.yaml -z docker-compose.yaml https://raw.githubusercontent.com/argilla-io/argilla-docker-deploy/main/docker-compose.yaml
+
 # Check if DEFAULT_USER_ENABLED is true
 if [ "$ARGILLA_DEFAULT_USER_ENABLED" = "true" ]; then
     # Check if DEFAULT_USER_PASSWORD and DEFAULT_USER_API_KEY are set
