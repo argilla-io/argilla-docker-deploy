@@ -20,5 +20,7 @@ The user executing the script must be in the `sudo` group and be able to execute
 export ARGILLA_ENABLE_DEFAULT_USER=true
 export ARGILLA_DEFAULT_USER_PASSWORD=the_password
 export ARGILLA_DEFAULT_USER_API_KEY=the_api_key
-./deploy-script.sh
+
+chmod +x deploy-argilla.sh
+./deploy-argilla.sh
 ```
