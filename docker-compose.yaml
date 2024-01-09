@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  argilla:
+    restart: always
+    image: argilla/argilla-server:v1.21.0
+    ports:
+      - 6900:6900
+    volumes:
+      - ./data:/var/lib/argilla
+    environment:
+      ARGILLA_ELASTICSEARCH: ${ARGILLA_ELASTICSEARCH:-http://elasticsearch:9200}
+      ARGILLA_DATABASE_URL: ${ARGILLA_DATABASE_URL:-postgresql+asyncpg://argilla:argilla@postgres:5432/argilla}
+      ARGILLA_ENABLE_TELEMETRY: 1
+      DEFAULT_USER_ENABLED: ${ARGILLA_DEFAULT_USER_ENABLED:-false}
+      DEFAULT_USER_PASSWORD: ${ARGILLA_DEFAULT_USER_PASSWORD} 
+      DEFAULT_USER_API_KEY: ${ARGILLA_DEFAULT_USER_API_KEY}
+
+
+  postgres:
+    restart: always
+    image: postgres:15
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_NAME:-argilla}
+      POSTGRES_USER: ${POSTGRES_USER:-argilla}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-argilla}
+
+  elasticsearch:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=es-argilla-local
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
