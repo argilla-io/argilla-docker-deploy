@@ -37,7 +37,7 @@ if [ $(getent group docker) ]; then
     fi
 fi
 
-curl -o docker-compose.yaml -z docker-compose.yaml https://raw.githubusercontent.com/argilla-io/argilla-docker-deploy/main/docker-compose.yaml
+# curl -o docker-compose.yaml -z docker-compose.yaml https://raw.githubusercontent.com/argilla-io/argilla-docker-deploy/main/docker-compose.yaml
 
 # Check if DEFAULT_USER_ENABLED is true
 if [ "$ARGILLA_DEFAULT_USER_ENABLED" = "true" ]; then
@@ -49,16 +49,7 @@ if [ "$ARGILLA_DEFAULT_USER_ENABLED" = "true" ]; then
 fi
 
 # Check if Argilla is running, and start it if not
-if [ -z "$(sudo docker compose ps -q)" ]; then
+if [ -z "$(docker compose ps -q)" ]; then
     echo "Running Argilla with docker compose..."
-    docker compose up -e ARGILLA_DEFAULT_USER_PASSWORD -e ARGILLA_DEFAULT_USER_API_KEY -d
-    docker compose up -d \
-        -e ARGILLA_ELASTICSEARCH \
-        -e ARGILLA_DATABASE_URL \
-        -e ARGILLA_DEFAULT_USER_ENABLED \
-        -e ARGILLA_DEFAULT_USER_PASSWORD \
-        -e ARGILLA_DEFAULT_USER_API_KEY \
-        -e POSTGRES_DB_NAME \
-        -e POSTGRES_USER \
-        -e POSTGRES_PASSWORD
+    docker compose up -d
 fi
